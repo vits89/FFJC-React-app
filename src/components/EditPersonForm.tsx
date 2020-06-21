@@ -1,5 +1,7 @@
-import React, { FunctionComponent, ChangeEvent, SyntheticEvent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 import { Box, Button, Checkbox, FormControl, FormControlLabel, TextField, Typography } from '@material-ui/core';
 
@@ -16,20 +18,21 @@ export const EditPersonForm: FunctionComponent<EditPersonComponentProps> = ({ ge
 
   const initialData = (id && getInitialData && getInitialData(id)) || new Person();
 
-  const [data, setData] = useState(initialData);
+  const formik = useFormik({
+    initialValues: initialData,
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required(),
+      height: Yup.number().positive().required(),
+      mass: Yup.number().positive().required(),
+      gender: Yup.mixed().oneOf(['male', 'female', 'n/a'] as const).required(),
+      birth_year: Yup.string().trim().required()
+    }),
+    onSubmit: (values: IPerson): void => {
+      saveData(values);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const { target: { checked, name, type, value } } = event;
-
-    setData({ ...data, [name]: type === 'checkbox' ? checked : value });
-  };
-  const handleSubmit = (event: SyntheticEvent): void => {
-    event.preventDefault();
-
-    saveData(data);
-
-    history.push('/people');
-  };
+      history.push('/people');
+    }
+  });
 
   return (
     <>
@@ -37,55 +40,55 @@ export const EditPersonForm: FunctionComponent<EditPersonComponentProps> = ({ ge
       <Box marginY={1}>
         <Button variant="contained" onClick={ () => history.goBack() }>Return</Button>
       </Box>
-      <form noValidate onSubmit={ handleSubmit }>
+      <form noValidate onSubmit={ formik.handleSubmit }>
         <TextField
           variant="outlined"
-          name="name"
-          value={ data.name }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Name"
+          error={ Boolean(formik.touched.name && formik.errors.name) }
+          helperText={ formik.touched.name && formik.errors.name }
+          { ...formik.getFieldProps('name') }
         />
         <TextField
           variant="outlined"
-          name="height"
-          value={ data.height }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Height"
+          error={ Boolean(formik.touched.height && formik.errors.height) }
+          helperText={ formik.touched.height && formik.errors.height }
+          { ...formik.getFieldProps('height') }
         />
         <TextField
           variant="outlined"
-          name="mass"
-          value={ data.mass }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Mass"
+          error={ Boolean(formik.touched.mass && formik.errors.mass) }
+          helperText={ formik.touched.mass && formik.errors.mass }
+          { ...formik.getFieldProps('mass') }
         />
         <TextField
           variant="outlined"
-          name="gender"
-          value={ data.gender }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Gender"
+          error={ Boolean(formik.touched.gender && formik.errors.gender) }
+          helperText={ formik.touched.gender && formik.errors.gender }
+          { ...formik.getFieldProps('gender') }
         />
         <TextField
           variant="outlined"
-          name="birth_year"
-          value={ data.birth_year }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Birth year"
+          error={ Boolean(formik.touched.birth_year && formik.errors.birth_year) }
+          helperText={ formik.touched.birth_year && formik.errors.birth_year }
+          { ...formik.getFieldProps('birth_year') }
         />
         <FormControl fullWidth>
           <FormControlLabel label="Beloved" control={
-            <Checkbox name="beloved" checked={ data.beloved } color="default" onChange={ handleChange } />
+            <Checkbox color="default" { ...formik.getFieldProps('beloved') } />
           } />
         </FormControl>
         <Box marginY={1}>
