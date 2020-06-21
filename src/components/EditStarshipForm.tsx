@@ -1,9 +1,11 @@
-import React, { FunctionComponent, ChangeEvent, SyntheticEvent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 import { Box, Button, TextField, Typography } from '@material-ui/core';
 
-import { IStarship } from '../types';
+import { IStarship, Starship } from '../types';
 
 type EditStarshipComponentProps = {
   getInitialData?: (id: string) => IStarship | undefined;
@@ -14,30 +16,24 @@ export const EditStarshipForm: FunctionComponent<EditStarshipComponentProps> = (
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
 
-  const initialData = (id && getInitialData && getInitialData(id)) || {
-    id: '',
-    name: '',
-    model: '',
-    starship_class: '',
-    manufacturer: '',
-    cost_in_credits: '',
-    crew: ''
-  };
+  const initialData = (id && getInitialData && getInitialData(id)) || new Starship();
 
-  const [data, setData] = useState(initialData);
+  const formik = useFormik({
+    initialValues: initialData,
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required(),
+      model: Yup.string().trim().required(),
+      starship_class: Yup.string().trim().required(),
+      manufacturer: Yup.string().trim().required(),
+      cost_in_credits: Yup.number().positive(),
+      crew: Yup.string().trim().required()
+    }),
+    onSubmit: (values: IStarship): void => {
+      saveData(values);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const { target: { name, value } } = event;
-
-    setData({ ...data, [name]: value });
-  };
-  const handleSubmit = (event: SyntheticEvent): void => {
-    event.preventDefault();
-
-    saveData(data);
-
-    history.push('/starships');
-  };
+      history.push('/starships');
+    }
+  });
 
   return (
     <>
@@ -45,60 +41,60 @@ export const EditStarshipForm: FunctionComponent<EditStarshipComponentProps> = (
       <Box marginY={1}>
         <Button variant="contained" onClick={ () => history.goBack() }>Return</Button>
       </Box>
-      <form noValidate onSubmit={ handleSubmit }>
+      <form noValidate onSubmit={ formik.handleSubmit }>
         <TextField
           variant="outlined"
-          name="name"
-          value={ data.name }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Name"
+          error={ Boolean(formik.touched.name && formik.errors.name) }
+          helperText={ formik.touched.name && formik.errors.name }
+          { ...formik.getFieldProps('name') }
         />
         <TextField
           variant="outlined"
-          name="model"
-          value={ data.model }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Model"
+          error={ Boolean(formik.touched.model && formik.errors.model) }
+          helperText={ formik.touched.model && formik.errors.model }
+          { ...formik.getFieldProps('model') }
         />
         <TextField
           variant="outlined"
-          name="starship_class"
-          value={ data.starship_class }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Class"
+          error={ Boolean(formik.touched.starship_class && formik.errors.starship_class) }
+          helperText={ formik.touched.starship_class && formik.errors.starship_class }
+          { ...formik.getFieldProps('starship_class') }
         />
         <TextField
           variant="outlined"
-          name="manufacturer"
-          value={ data.manufacturer }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Manufacturer"
+          error={ Boolean(formik.touched.manufacturer && formik.errors.manufacturer) }
+          helperText={ formik.touched.manufacturer && formik.errors.manufacturer }
+          { ...formik.getFieldProps('manufacturer') }
         />
         <TextField
           variant="outlined"
-          name="cost_in_credits"
-          value={ data.cost_in_credits }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Cost"
+          error={ Boolean(formik.touched.cost_in_credits && formik.errors.cost_in_credits) }
+          helperText={ formik.touched.cost_in_credits && formik.errors.cost_in_credits }
+          { ...formik.getFieldProps('cost_in_credits') }
         />
         <TextField
           variant="outlined"
-          name="crew"
-          value={ data.crew }
           fullWidth
           margin="normal"
-          onChange={ handleChange }
           label="Crew"
+          error={ Boolean(formik.touched.crew && formik.errors.crew) }
+          helperText={ formik.touched.crew && formik.errors.crew }
+          { ...formik.getFieldProps('crew') }
         />
         <Box marginY={1}>
           <Button type="submit" variant="contained">Save</Button>
