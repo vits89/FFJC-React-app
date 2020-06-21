@@ -1,31 +1,23 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Typography } from '@material-ui/core';
 
-import faker from 'faker';
-
 import { EditPersonForm, PeopleList } from '../components';
 
-import { IPerson } from '../types';
+import { swApiServiceCacheDecorator } from '../services';
 
-const fakePeople = new Array<IPerson>(10);
-
-for (let i = 0; i < fakePeople.length; i++) {
-  fakePeople[i] = {
-    id: faker.random.uuid(),
-    name: faker.name.findName(),
-    height: faker.random.number(200).toString(),
-    mass: faker.random.number(150).toString(),
-    gender: faker.random.arrayElement(['male', 'female', 'n/a']),
-    birth_year: faker.date.past().getFullYear().toString(),
-    beloved: faker.random.boolean()
-  };
-}
+import { IPerson, Person } from '../types';
 
 export const PeoplePage: FunctionComponent = () => {
-  const [people, setPeople] = useState(fakePeople);
+  const [people, setPeople] = useState(new Array<IPerson>(0));
   const routeMatch = useRouteMatch();
+
+  useEffect(() => {
+    swApiServiceCacheDecorator<IPerson>('people', Person)
+      .then(people => setPeople(people));
+  }, []);
 
   const findPerson = (id: string): IPerson | undefined => {
     if (!id) {
@@ -36,7 +28,7 @@ export const PeoplePage: FunctionComponent = () => {
   };
 
   const addPerson = (person: IPerson): void => {
-    person.id = faker.random.uuid();
+    person.id = uuidv4();
 
     setPeople([...people, person]);
   };

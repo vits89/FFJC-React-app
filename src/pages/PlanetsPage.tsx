@@ -1,31 +1,23 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Typography } from '@material-ui/core';
 
-import faker from 'faker';
-
 import { EditPlanetForm, PlanetsList } from '../components';
 
-import { IPlanet } from '../types';
+import { swApiServiceCacheDecorator } from '../services';
 
-const fakePlanets = new Array<IPlanet>(10);
-
-for (let i = 0; i < fakePlanets.length; i++) {
-  fakePlanets[i] = {
-    id: faker.random.uuid(),
-    name: faker.random.word(),
-    climate: faker.random.words(),
-    terrain: faker.random.words(),
-    diameter: faker.random.number(50e3).toString(),
-    population: faker.random.number(1e9).toString(),
-    created: faker.date.past().toString()
-  };
-}
+import { IPlanet, Planet } from '../types';
 
 export const PlanetsPage: FunctionComponent = () => {
-  const [planets, setPlanets] = useState(fakePlanets);
+  const [planets, setPlanets] = useState(new Array<IPlanet>(0));
   const routeMatch = useRouteMatch();
+
+  useEffect(() => {
+    swApiServiceCacheDecorator<IPlanet>('planets', Planet)
+      .then(planets => setPlanets(planets));
+  }, []);
 
   const findPlanet = (id: string): IPlanet | undefined => {
     if (!id) {
@@ -36,7 +28,7 @@ export const PlanetsPage: FunctionComponent = () => {
   };
 
   const addPlanet = (planet: IPlanet): void => {
-    planet.id = faker.random.uuid();
+    planet.id = uuidv4();
 
     setPlanets([...planets, planet]);
   };

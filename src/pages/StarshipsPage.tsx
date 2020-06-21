@@ -1,31 +1,23 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Typography } from '@material-ui/core';
 
-import faker from 'faker';
-
 import { EditStarshipForm, StarshipsList } from '../components';
 
-import { IStarship } from '../types';
+import { swApiServiceCacheDecorator } from '../services';
 
-const fakeStarships = new Array<IStarship>(10);
-
-for (let i = 0; i < fakeStarships.length; i++) {
-  fakeStarships[i] = {
-    id: faker.random.uuid(),
-    name: faker.random.word(),
-    model: faker.random.word(),
-    starship_class: faker.random.word(),
-    manufacturer: faker.random.word(),
-    cost_in_credits: faker.random.number(1e6).toString(),
-    crew: faker.random.number(1e3).toString()
-  };
-}
+import { IStarship, Starship } from '../types';
 
 export const StarshipsPage: FunctionComponent = () => {
-  const [starships, setStarships] = useState(fakeStarships);
+  const [starships, setStarships] = useState(new Array<IStarship>(0));
   const routeMatch = useRouteMatch();
+
+  useEffect(() => {
+    swApiServiceCacheDecorator<IStarship>('starships', Starship)
+      .then(starships => setStarships(starships));
+  }, []);
 
   const findStarship = (id: string): IStarship | undefined => {
     if (!id) {
@@ -36,7 +28,7 @@ export const StarshipsPage: FunctionComponent = () => {
   };
 
   const addStarship = (starship: IStarship): void => {
-    starship.id = faker.random.uuid();
+    starship.id = uuidv4();
 
     setStarships([...starships, starship]);
   };
