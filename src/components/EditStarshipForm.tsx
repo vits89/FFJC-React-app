@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { Box, Button, TextField, Typography } from '@material-ui/core';
 
-import { IStarship } from '../types';
+import { IStarship, Starship } from '../types';
 
 type EditStarshipComponentProps = {
   getInitialData?: (id: string) => IStarship | undefined;
@@ -14,15 +14,7 @@ export const EditStarshipForm: FunctionComponent<EditStarshipComponentProps> = (
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
 
-  const initialData = (id && getInitialData && getInitialData(id)) || {
-    id: '',
-    name: '',
-    model: '',
-    starship_class: '',
-    manufacturer: '',
-    cost_in_credits: '',
-    crew: ''
-  };
+  const initialData = (id && getInitialData && getInitialData(id)) || new Starship();
 
   const [data, setData] = useState(initialData);
 

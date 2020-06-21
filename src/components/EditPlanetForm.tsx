@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { Box, Button, TextField, Typography } from '@material-ui/core';
 
-import { IPlanet } from '../types';
+import { IPlanet, Planet } from '../types';
 
 type EditPlanetComponentProps = {
   getInitialData?: (id: string) => IPlanet | undefined;
@@ -14,15 +14,7 @@ export const EditPlanetForm: FunctionComponent<EditPlanetComponentProps> = ({ ge
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
 
-  const initialData = (id && getInitialData && getInitialData(id)) || {
-    id: '',
-    name: '',
-    climate: '',
-    terrain: '',
-    diameter: '',
-    population: '',
-    created: ''
-  };
+  const initialData = (id && getInitialData && getInitialData(id)) || new Planet();
 
   const [data, setData] = useState(initialData);
 

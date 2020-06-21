@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { Box, Button, Checkbox, FormControl, FormControlLabel, TextField, Typography } from '@material-ui/core';
 
-import { IPerson } from '../types';
+import { IPerson, Person } from '../types';
 
 type EditPersonComponentProps = {
   getInitialData?: (id: string) => IPerson | undefined;
@@ -14,15 +14,7 @@ export const EditPersonForm: FunctionComponent<EditPersonComponentProps> = ({ ge
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
 
-  const initialData = (id && getInitialData && getInitialData(id)) || {
-    id: '',
-    name: '',
-    height: '',
-    mass: '',
-    gender: '',
-    birth_year: '',
-    beloved: false
-  };
+  const initialData = (id && getInitialData && getInitialData(id)) || new Person();
 
   const [data, setData] = useState(initialData);
 
