@@ -20,9 +20,14 @@ const columnNames = {
 type PeopleListComponentProps = {
   people: IPerson[],
   deletePerson?: (id: string) => void;
+  changePersonBeloved?: (id: string) => void;
 };
 
-export const PeopleList: FunctionComponent<PeopleListComponentProps> = ({ people, deletePerson }) => {
+export const PeopleList: FunctionComponent<PeopleListComponentProps> = ({
+  people,
+  deletePerson,
+  changePersonBeloved
+}) => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
 
@@ -32,7 +37,12 @@ export const PeopleList: FunctionComponent<PeopleListComponentProps> = ({ people
         <Button variant="contained" onClick={ () => history.push(`${ routeMatch.path }/add`) }>Add person</Button>
       </Box>
       { people.length > 0 ?
-        <Table columnNames={ columnNames } rowData={ people } deleteRow={ deletePerson } /> :
+        <Table
+          columnNames={ columnNames }
+          rowData={ people }
+          deleteRow={ deletePerson }
+          changeStatus={ changePersonBeloved }
+        /> :
         <Typography variant="body1">No data provided.</Typography> }
     </>
   );

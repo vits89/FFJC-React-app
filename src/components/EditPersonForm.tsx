@@ -88,7 +88,7 @@ export const EditPersonForm: FunctionComponent<EditPersonComponentProps> = ({ ge
         />
         <FormControl fullWidth>
           <FormControlLabel label="Beloved" control={
-            <Checkbox color="default" { ...formik.getFieldProps('beloved') } />
+            <Checkbox color="default" checked={ formik.values.beloved } { ...formik.getFieldProps('beloved') } />
           } />
         </FormControl>
         <Box marginY={1}>

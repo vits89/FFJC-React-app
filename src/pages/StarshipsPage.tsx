@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 import { Typography } from '@material-ui/core';
 
@@ -8,16 +8,26 @@ import { EditStarshipForm, StarshipsList } from '../components';
 
 import { swApiServiceCacheDecorator } from '../services';
 
+import {
+  addStarshipAction,
+  editStarshipAction,
+  deleteStarshipAction,
+  setStarshipsAction
+} from '../store/actions/starshipsActions';
+import { starshipsSelector } from '../store/selectors/starshipsSelector';
+
 import { IStarship, Starship } from '../types';
 
 export const StarshipsPage: FunctionComponent = () => {
-  const [starships, setStarships] = useState(new Array<IStarship>(0));
+  const dispatch = useDispatch();
   const routeMatch = useRouteMatch();
 
   useEffect(() => {
     swApiServiceCacheDecorator<IStarship>('starships', Starship)
-      .then(starships => setStarships(starships));
-  }, []);
+      .then(starships => dispatch(setStarshipsAction(starships)));
+  }, [dispatch]);
+
+  const starships = useSelector(starshipsSelector);
 
   const findStarship = (id: string): IStarship | undefined => {
     if (!id) {
@@ -28,15 +38,13 @@ export const StarshipsPage: FunctionComponent = () => {
   };
 
   const addStarship = (starship: IStarship): void => {
-    starship.id = uuidv4();
-
-    setStarships([...starships, starship]);
+    dispatch(addStarshipAction(starship));
   };
   const editStarship = (editedStarship: IStarship): void => {
-    setStarships(starships.map(starship => starship.id === editedStarship.id ? editedStarship : starship));
+    dispatch(editStarshipAction(editedStarship));
   };
   const deleteStarship = (id: string): void => {
-    setStarships(starships.filter(starship => starship.id !== id));
+    dispatch(deleteStarshipAction(id));
   };
 
   return (
