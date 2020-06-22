@@ -18,9 +18,10 @@ type TableComponentProps = {
   columnNames: { [key: string]: string },
   rowData: { [key: string]: any }[],
   deleteRow?: (id: string) => void;
+  changeStatus?: (id: string) => void;
 };
 
-export const Table: FunctionComponent<TableComponentProps> = ({ columnNames, rowData, deleteRow }) => {
+export const Table: FunctionComponent<TableComponentProps> = ({ columnNames, rowData, deleteRow, changeStatus }) => {
   const routeMatch = useRouteMatch();
 
   return (
@@ -47,7 +48,8 @@ export const Table: FunctionComponent<TableComponentProps> = ({ columnNames, row
                       checked={ data[propName] }
                       color="default"
                       inputProps={ { 'aria-label': colName } }
-                      disabled
+                      disabled={ !changeStatus }
+                      onChange={ changeStatus ? () => changeStatus(data['id'] || index) : undefined }
                     /> :
                     data[propName] ?
                       propName === 'name' ?

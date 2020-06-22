@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 import { Typography } from '@material-ui/core';
 
@@ -8,16 +8,27 @@ import { EditPersonForm, PeopleList } from '../components';
 
 import { swApiServiceCacheDecorator } from '../services';
 
+import {
+  addPersonAction,
+  editPersonAction,
+  deletePersonAction,
+  changePersonBelovedAction,
+  setPeopleAction
+} from '../store/actions/peopleActions';
+import { peopleSelector } from '../store/selectors/peopleSelectors';
+
 import { IPerson, Person } from '../types';
 
 export const PeoplePage: FunctionComponent = () => {
-  const [people, setPeople] = useState(new Array<IPerson>(0));
+  const dispatch = useDispatch();
   const routeMatch = useRouteMatch();
 
   useEffect(() => {
     swApiServiceCacheDecorator<IPerson>('people', Person)
-      .then(people => setPeople(people));
-  }, []);
+      .then(people => dispatch(setPeopleAction(people)));
+  }, [dispatch]);
+
+  const people = useSelector(peopleSelector);
 
   const findPerson = (id: string): IPerson | undefined => {
     if (!id) {
@@ -28,15 +39,16 @@ export const PeoplePage: FunctionComponent = () => {
   };
 
   const addPerson = (person: IPerson): void => {
-    person.id = uuidv4();
-
-    setPeople([...people, person]);
+    dispatch(addPersonAction(person));
   };
   const editPerson = (editedPerson: IPerson): void => {
-    setPeople(people.map(person => person.id === editedPerson.id ? editedPerson : person));
+    dispatch(editPersonAction(editedPerson));
   };
   const deletePerson = (id: string): void => {
-    setPeople(people.filter(person => person.id !== id));
+    dispatch(deletePersonAction(id));
+  };
+  const changePersonBeloved = (id: string): void => {
+    dispatch(changePersonBelovedAction(id));
   };
 
   return (
@@ -50,7 +62,7 @@ export const PeoplePage: FunctionComponent = () => {
           <EditPersonForm getInitialData={ findPerson } saveData={ editPerson } />
         </Route>
         <Route path={ routeMatch.path }>
-          <PeopleList people={ people } deletePerson={ deletePerson } />
+          <PeopleList people={ people } deletePerson={ deletePerson } changePersonBeloved={ changePersonBeloved } />
         </Route>
       </Switch>
     </>

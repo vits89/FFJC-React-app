@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 import { Typography } from '@material-ui/core';
 
@@ -8,16 +8,26 @@ import { EditPlanetForm, PlanetsList } from '../components';
 
 import { swApiServiceCacheDecorator } from '../services';
 
+import {
+  addPlanetAction,
+  editPlanetAction,
+  deletePlanetAction,
+  setPlanetsAction
+} from '../store/actions/planetsActions';
+import { planetsSelector } from '../store/selectors/planetsSelector';
+
 import { IPlanet, Planet } from '../types';
 
 export const PlanetsPage: FunctionComponent = () => {
-  const [planets, setPlanets] = useState(new Array<IPlanet>(0));
+  const dispatch = useDispatch();
   const routeMatch = useRouteMatch();
 
   useEffect(() => {
     swApiServiceCacheDecorator<IPlanet>('planets', Planet)
-      .then(planets => setPlanets(planets));
-  }, []);
+      .then(planets => dispatch(setPlanetsAction(planets)));
+  }, [dispatch]);
+
+  const planets = useSelector(planetsSelector);
 
   const findPlanet = (id: string): IPlanet | undefined => {
     if (!id) {
@@ -28,15 +38,13 @@ export const PlanetsPage: FunctionComponent = () => {
   };
 
   const addPlanet = (planet: IPlanet): void => {
-    planet.id = uuidv4();
-
-    setPlanets([...planets, planet]);
+    dispatch(addPlanetAction(planet));
   };
   const editPlanet = (editedPlanet: IPlanet): void => {
-    setPlanets(planets.map(planet => planet.id === editedPlanet.id ? editedPlanet : planet));
+    dispatch(editPlanetAction(editedPlanet));
   };
   const deletePlanet = (id: string): void => {
-    setPlanets(planets.filter(planet => planet.id !== id));
+    dispatch(deletePlanetAction(id));
   };
 
   return (
