@@ -3,7 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Box, Button, Typography } from '@material-ui/core';
 
-import { Table } from './common'
+import { Table } from './common';
 
 import { IPerson } from '../types';
 
@@ -14,11 +14,11 @@ const columnNames = {
   gender: 'Gender',
   birth_year: 'Birth year',
   beloved: 'Beloved',
-  id: 'ID'
+  id: 'ID',
 };
 
 type PeopleListComponentProps = {
-  people: IPerson[],
+  people: IPerson[];
   deletePerson?: (id: string) => void;
   changePersonBeloved?: (id: string) => void;
 };
@@ -26,7 +26,7 @@ type PeopleListComponentProps = {
 export const PeopleList: FunctionComponent<PeopleListComponentProps> = ({
   people,
   deletePerson,
-  changePersonBeloved
+  changePersonBeloved,
 }) => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
@@ -34,16 +34,23 @@ export const PeopleList: FunctionComponent<PeopleListComponentProps> = ({
   return (
     <>
       <Box marginY={1}>
-        <Button variant="contained" onClick={ () => history.push(`${ routeMatch.path }/add`) }>Add person</Button>
+        <Button
+          variant="contained"
+          onClick={() => history.push(`${routeMatch.path}/add`)}
+        >
+          Add person
+        </Button>
       </Box>
-      { people.length > 0 ?
+      {people.length > 0 ? (
         <Table
-          columnNames={ columnNames }
-          rowData={ people }
-          deleteRow={ deletePerson }
-          changeStatus={ changePersonBeloved }
-        /> :
-        <Typography variant="body1">No data provided.</Typography> }
+          columnNames={columnNames}
+          rowData={people}
+          deleteRow={deletePerson}
+          changeStatus={changePersonBeloved}
+        />
+      ) : (
+        <Typography variant="body1">No data provided.</Typography>
+      )}
     </>
   );
 };

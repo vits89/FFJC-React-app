@@ -6,4 +6,4 @@ export interface IStarship {
   manufacturer: string;
   cost_in_credits: string;
   crew: string;
-};
+}

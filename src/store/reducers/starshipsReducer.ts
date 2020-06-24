@@ -5,12 +5,12 @@ import {
   addStarshipAction,
   editStarshipAction,
   deleteStarshipAction,
-  setStarshipsAction
+  setStarshipsAction,
 } from '../actions/starshipsActions';
 
 import { IStarship } from '../../types';
 
-const defaultState = Array<IStarship>();
+const defaultState: IStarship[] = [];
 
 export const starshipsReducer = createReducer(defaultState, handleAction => [
   handleAction(addStarshipAction, (state, { payload: { starship } }) => {
@@ -18,11 +18,19 @@ export const starshipsReducer = createReducer(defaultState, handleAction => [
 
     return [...state, starship];
   }),
-  handleAction(editStarshipAction, (state, { payload: { starship: editedStarship } }) => {
-    return state.map(starship => starship.id === editedStarship.id ? editedStarship : starship);
-  }),
+  handleAction(
+    editStarshipAction,
+    (state, { payload: { starship: editedStarship } }) => {
+      return state.map(starship =>
+        starship.id === editedStarship.id ? editedStarship : starship
+      );
+    }
+  ),
   handleAction(deleteStarshipAction, (state, { payload: { id } }) => {
     return state.filter(starship => starship.id !== id);
   }),
-  handleAction(setStarshipsAction, (_, { payload: { starships } }) => starships)
+  handleAction(
+    setStarshipsAction,
+    (_, { payload: { starships } }) => starships
+  ),
 ]);

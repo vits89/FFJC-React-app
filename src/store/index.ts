@@ -7,7 +7,7 @@ import { IStore } from '../types';
 const defaultState: IStore = {
   people: [],
   planets: [],
-  starships: []
+  starships: [],
 };
 
 export const store = createStore(combinedReducer, defaultState);

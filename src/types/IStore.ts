@@ -4,4 +4,4 @@ export interface IStore {
   people: IPerson[];
   planets: IPlanet[];
   starships: IStarship[];
-};
+}
