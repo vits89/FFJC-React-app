@@ -12,7 +12,7 @@ import {
   addPlanetAction,
   editPlanetAction,
   deletePlanetAction,
-  setPlanetsAction
+  setPlanetsAction,
 } from '../store/actions/planetsActions';
 import { planetsSelector } from '../store/selectors/planetsSelector';
 
@@ -23,8 +23,9 @@ export const PlanetsPage: FunctionComponent = () => {
   const routeMatch = useRouteMatch();
 
   useEffect(() => {
-    swApiServiceCacheDecorator<IPlanet>('planets', Planet)
-      .then(planets => dispatch(setPlanetsAction(planets)));
+    swApiServiceCacheDecorator<IPlanet>('planets', Planet).then(planets =>
+      dispatch(setPlanetsAction(planets))
+    );
   }, [dispatch]);
 
   const planets = useSelector(planetsSelector);
@@ -49,16 +50,18 @@ export const PlanetsPage: FunctionComponent = () => {
 
   return (
     <>
-      <Typography component="h2" variant="h5">Planets from Star Wars Universe</Typography>
+      <Typography component="h2" variant="h5">
+        Planets from Star Wars Universe
+      </Typography>
       <Switch>
-        <Route path={ `${ routeMatch.path }/add` }>
-          <EditPlanetForm saveData={ addPlanet } />
+        <Route path={`${routeMatch.path}/add`}>
+          <EditPlanetForm saveData={addPlanet} />
         </Route>
-        <Route path={ `${ routeMatch.path }/:id` }>
-          <EditPlanetForm getInitialData={ findPlanet } saveData={ editPlanet } />
+        <Route path={`${routeMatch.path}/:id`}>
+          <EditPlanetForm getInitialData={findPlanet} saveData={editPlanet} />
         </Route>
-        <Route path={ routeMatch.path }>
-          <PlanetsList planets={ planets } deletePlanet={ deletePlanet } />
+        <Route path={routeMatch.path}>
+          <PlanetsList planets={planets} deletePlanet={deletePlanet} />
         </Route>
       </Switch>
     </>

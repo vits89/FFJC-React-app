@@ -6,4 +6,4 @@ export interface IPlanet {
   diameter: string;
   population: string;
   created: string;
-};
+}

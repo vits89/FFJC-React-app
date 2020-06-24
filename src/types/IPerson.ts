@@ -6,4 +6,4 @@ export interface IPerson {
   gender: string;
   birth_year: string;
   beloved: boolean;
-};
+}

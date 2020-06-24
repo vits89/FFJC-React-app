@@ -12,7 +12,7 @@ import {
   addStarshipAction,
   editStarshipAction,
   deleteStarshipAction,
-  setStarshipsAction
+  setStarshipsAction,
 } from '../store/actions/starshipsActions';
 import { starshipsSelector } from '../store/selectors/starshipsSelector';
 
@@ -23,8 +23,10 @@ export const StarshipsPage: FunctionComponent = () => {
   const routeMatch = useRouteMatch();
 
   useEffect(() => {
-    swApiServiceCacheDecorator<IStarship>('starships', Starship)
-      .then(starships => dispatch(setStarshipsAction(starships)));
+    swApiServiceCacheDecorator<IStarship>(
+      'starships',
+      Starship
+    ).then(starships => dispatch(setStarshipsAction(starships)));
   }, [dispatch]);
 
   const starships = useSelector(starshipsSelector);
@@ -49,16 +51,24 @@ export const StarshipsPage: FunctionComponent = () => {
 
   return (
     <>
-      <Typography component="h2" variant="h5">Starships from Star Wars Universe</Typography>
+      <Typography component="h2" variant="h5">
+        Starships from Star Wars Universe
+      </Typography>
       <Switch>
-        <Route path={ `${ routeMatch.path }/add` }>
-          <EditStarshipForm saveData={ addStarship } />
+        <Route path={`${routeMatch.path}/add`}>
+          <EditStarshipForm saveData={addStarship} />
         </Route>
-        <Route path={ `${ routeMatch.path }/:id` }>
-          <EditStarshipForm getInitialData={ findStarship } saveData={ editStarship } />
+        <Route path={`${routeMatch.path}/:id`}>
+          <EditStarshipForm
+            getInitialData={findStarship}
+            saveData={editStarship}
+          />
         </Route>
-        <Route path={ routeMatch.path }>
-          <StarshipsList starships={ starships } deleteStarship={ deleteStarship } />
+        <Route path={routeMatch.path}>
+          <StarshipsList
+            starships={starships}
+            deleteStarship={deleteStarship}
+          />
         </Route>
       </Switch>
     </>

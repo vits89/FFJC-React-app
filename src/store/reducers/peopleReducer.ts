@@ -6,12 +6,12 @@ import {
   editPersonAction,
   deletePersonAction,
   changePersonBelovedAction,
-  setPeopleAction
+  setPeopleAction,
 } from '../actions/peopleActions';
 
 import { IPerson } from '../../types';
 
-const defaultState = Array<IPerson>();
+const defaultState: IPerson[] = [];
 
 export const peopleReducer = createReducer(defaultState, handleAction => [
   handleAction(addPersonAction, (state, { payload: { person } }) => {
@@ -19,14 +19,21 @@ export const peopleReducer = createReducer(defaultState, handleAction => [
 
     return [...state, person];
   }),
-  handleAction(editPersonAction, (state, { payload: { person: editedPerson } }) => {
-    return state.map(person => person.id === editedPerson.id ? editedPerson : person);
-  }),
+  handleAction(
+    editPersonAction,
+    (state, { payload: { person: editedPerson } }) => {
+      return state.map(person =>
+        person.id === editedPerson.id ? editedPerson : person
+      );
+    }
+  ),
   handleAction(deletePersonAction, (state, { payload: { id } }) => {
     return state.filter(person => person.id !== id);
   }),
   handleAction(changePersonBelovedAction, (state, { payload: { id } }) => {
-    return state.map(person => person.id === id ? { ...person, beloved: !person.beloved } : person);
+    return state.map(person =>
+      person.id === id ? { ...person, beloved: !person.beloved } : person
+    );
   }),
-  handleAction(setPeopleAction, (_, { payload: { people } }) => people)
+  handleAction(setPeopleAction, (_, { payload: { people } }) => people),
 ]);

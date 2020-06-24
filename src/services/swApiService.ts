@@ -1,8 +1,11 @@
 const baseUrl = 'https://swapi.dev/api/';
 
-export async function swApiService(endpoint: string, number = 10): Promise<{ [key: string]: any }[]> {
+export async function swApiService(
+  endpoint: string,
+  number = 10
+): Promise<{ [key: string]: any }[]> {
   if (!endpoint) {
-    return Promise.resolve(new Array<{ [key: string]: any }>());
+    return Promise.resolve(new Array<{ [key: string]: any }>(0));
   }
 
   const response = await fetch(`${baseUrl + endpoint}/`);

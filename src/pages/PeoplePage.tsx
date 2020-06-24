@@ -13,7 +13,7 @@ import {
   editPersonAction,
   deletePersonAction,
   changePersonBelovedAction,
-  setPeopleAction
+  setPeopleAction,
 } from '../store/actions/peopleActions';
 import { peopleSelector } from '../store/selectors/peopleSelectors';
 
@@ -24,8 +24,9 @@ export const PeoplePage: FunctionComponent = () => {
   const routeMatch = useRouteMatch();
 
   useEffect(() => {
-    swApiServiceCacheDecorator<IPerson>('people', Person)
-      .then(people => dispatch(setPeopleAction(people)));
+    swApiServiceCacheDecorator<IPerson>('people', Person).then(people =>
+      dispatch(setPeopleAction(people))
+    );
   }, [dispatch]);
 
   const people = useSelector(peopleSelector);
@@ -53,16 +54,22 @@ export const PeoplePage: FunctionComponent = () => {
 
   return (
     <>
-      <Typography component="h2" variant="h5">People from Star Wars Universe</Typography>
+      <Typography component="h2" variant="h5">
+        People from Star Wars Universe
+      </Typography>
       <Switch>
-        <Route path={ `${ routeMatch.path }/add` }>
-          <EditPersonForm saveData={ addPerson } />
+        <Route path={`${routeMatch.path}/add`}>
+          <EditPersonForm saveData={addPerson} />
         </Route>
-        <Route path={ `${ routeMatch.path }/:id` }>
-          <EditPersonForm getInitialData={ findPerson } saveData={ editPerson } />
+        <Route path={`${routeMatch.path}/:id`}>
+          <EditPersonForm getInitialData={findPerson} saveData={editPerson} />
         </Route>
-        <Route path={ routeMatch.path }>
-          <PeopleList people={ people } deletePerson={ deletePerson } changePersonBeloved={ changePersonBeloved } />
+        <Route path={routeMatch.path}>
+          <PeopleList
+            people={people}
+            deletePerson={deletePerson}
+            changePersonBeloved={changePersonBeloved}
+          />
         </Route>
       </Switch>
     </>

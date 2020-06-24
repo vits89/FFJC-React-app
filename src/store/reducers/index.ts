@@ -7,5 +7,5 @@ import { starshipsReducer } from './starshipsReducer';
 export const combinedReducer = combineReducers({
   people: peopleReducer,
   planets: planetsReducer,
-  starships: starshipsReducer
+  starships: starshipsReducer,
 });
