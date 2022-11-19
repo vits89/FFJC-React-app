@@ -1,3 +1,22 @@
+This solution is the result of completion a test task, according to which a Web application should be created in accordance with the following requirements:
+
+- Requests data from [swapi.dev](https://swapi.dev) (first 10 entities).
+- Stores the data to browser's local storage for the first time, gets data from the storage for consequence requests.
+- Contains following pages:
+  - _/_ or _/people_ – to show people as a table and set person to be beloved. Columns: ID, Name, Height, Mass, Gender, Birth year, Beloved.
+  - _/planets_ – to show planets as a table with following columns: ID, Name, Climate, Terrain, Diameter, Population, Created.
+  - _/starships_ – to show starships as a table with following columns: ID, Name, Model, Class, Manufacturer, Cost, Crew.
+  - _/something/add_ – to add something, e.g. _/people/add_.
+  - _/something/{id}_ – to edit something, e.g. _/planets/123_.
+- Implement form validation.
+- Technologies:
+  - React
+  - React Router
+  - Redux
+  - Other technologies are up to you
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
